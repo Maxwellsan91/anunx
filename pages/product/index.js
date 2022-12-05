@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core'
 import Carousel from 'react-material-ui-carousel'
 
-import TemplateDefault from '../src/templates/Default'
+import TemplateDefault from '../../src/templates/Default'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles ((theme) => ({
