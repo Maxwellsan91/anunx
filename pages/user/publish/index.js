@@ -42,10 +42,6 @@ const Publish = () => {
                         handleSubmit,
                         setFieldValue,
                     }) => {
-
-                                        
-
-
                         return (
                         <form onSubmit={handleSubmit}>
                             <Container maxWidth="sm" >
