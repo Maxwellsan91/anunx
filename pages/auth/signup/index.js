@@ -1,26 +1,44 @@
-import TemplateDefault from '../../../src/templates/Default'
 import { Formik } from 'formik'
+import axios from 'axios'
+import { useRouter } from 'next/router'
 
 import {
     Box,
     Button,
     Container,
     FormControl,
-    Select,
     Typography,
     InputLabel,
-    InputAdornment,
     FormHelperText,
     Input,
+    CircularProgress
 } from '@material-ui/core'
 
+import TemplateDefault from '../../../src/templates/Default'
 import { initialValues, validationSchema } from './formValues'
+import useToasty from '../../../src/contexts/Toasty'
 import useStyles from './style'
 
 
 
 const Signup = () => {
     const classes = useStyles()
+    const router = useRouter()
+    const { setToasty } = useToasty()
+
+    const handleFormSubmit = async values => {
+        const response = await axios.post('/api/users', values)
+
+        if( response.data.success ) {
+            setToasty({
+                open: true,
+                severity: 'success',
+                text: 'Cadastro realizado com sucesso!'
+            })
+            //redirect Login
+             router.push('/auth/signin')
+        }
+    }
 
     return(
         <TemplateDefault>
@@ -37,9 +55,7 @@ const Signup = () => {
                         <Formik
                             initialValues={initialValues}
                             validationSchema={validationSchema}
-                            onSubmit={(values) =>{
-                                console.log('ok, Enviado', values)
-                            }}
+                            onSubmit={handleFormSubmit}
                         >
                             {
                                 ({
@@ -48,6 +64,7 @@ const Signup = () => {
                                     errors,
                                     handleChange,
                                     handleSubmit,
+                                    isSubmitting,
                                 }) => {
                                     return (
                                         <form onSubmit={handleSubmit}>
@@ -102,16 +119,25 @@ const Signup = () => {
                                                 </FormHelperText>
                                             </FormControl>
 
-                                            <Button
-                                                type='submit'
-                                                fullWidth
-                                                variant='contained'
-                                                color='primary'
-                                                className={classes.submit}
-                                                // disabled={isSubmitting}
-                                                >
+                                            {
+                                                isSubmitting
+                                                ? (
+                                                    <CircularProgress className={classes.loading} />
+                                                ) : (
+                                                <Button
+                                                    type='submit'
+                                                    fullWidth
+                                                    variant='contained'
+                                                    color='primary'
+                                                    className={classes.submit}
+                                                    // disabled={isSubmitting}
+                                                > 
                                                     Cadastrar
                                                 </Button>
+                                                )
+
+                                            }
+
                                         </form>
                                     )
                                 }
