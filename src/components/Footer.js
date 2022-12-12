@@ -14,7 +14,10 @@ const useStyles = makeStyles((theme) => ({
             paddingBottom: theme.spacing(5),
         }
 
-    }
+    },
+    linkAnc: {
+        textDecorationLine: 'none',
+      }
 }))
 
 const Footer = () => {
@@ -25,28 +28,28 @@ const Footer = () => {
             <Grid container spacing={3}>
                 <Grid item xs={6} sm={3} >
                     <Box textAlign="center">
-                        <Link href="#" passHref>
+                        <Link href="#" passHref className={classes.linkAnc}>
                             <Typography color="textSecondary" variant="subtitle1">Ajuda e Contato</Typography>
                         </Link> 
                     </Box>
                 </Grid>
                 <Grid item xs={6} sm={3} >
                     <Box textAlign="center">
-                    <Link href="#" passHref>
+                    <Link href="#" passHref className={classes.linkAnc}>
                             <Typography color="textSecondary" variant="subtitle1">Dicas de segurança</Typography>
                         </Link>                        
                     </Box>
                 </Grid>
                 <Grid item xs={6} sm={3} >
                     <Box textAlign="center">
-                    <Link href="#" passHref>
+                    <Link href="#" passHref className={classes.linkAnc}>
                             <Typography color="textSecondary" variant="subtitle1">Anunciar e Vender</Typography>
                         </Link>                        
                     </Box>
                 </Grid>
                 <Grid item xs={6} sm={3} >
                     <Box textAlign="center">
-                    <Link href="#" passHref>
+                    <Link href="#" passHref className={classes.linkAnc}>
                             <Typography color="textSecondary" variant="subtitle1">Plano Profissional</Typography>
                         </Link>                        
                     </Box>

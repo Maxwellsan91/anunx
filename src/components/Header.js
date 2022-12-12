@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme) => ({
   },
   divider: {
     margin: '8px 0'
+  },
+  linkAnc: {
+    textDecorationLine: 'none',
   }
 }));
 
@@ -42,12 +45,12 @@ export default function ButtonAppBar() {
   return (
     <>
         <AppBar position="static" elevation={3}>
-          <Container maxWidth="lg">
+          <Container maxWidth="lg" >
             <Toolbar> 
               <Typography variant="h6" className={classes.title}>
                 AnunX
               </Typography>
-              <Link href="/user/publish" passHref>
+              <Link href="/user/publish" passHref className={classes.linkAnc} >
                 <Button color="secondary" variant="outlined">
                   Anunciar e Vender
                 </Button>
