@@ -1,6 +1,7 @@
+import Image from 'next/image'
 import { Formik } from 'formik'
 import { useRouter } from 'next/router'
-import { signIn, session } from 'next-auth/client'
+import { signIn, useSession } from 'next-auth/client'
 
 import {
     Box,
@@ -22,20 +23,27 @@ import { Alert } from '@material-ui/lab'
 
 
 
-const Signin = () => {
+const Signin = ({APP_URL}) => {
     const classes = useStyles()
     const router = useRouter()
     const { setToasty } = useToasty()
+    const [session] = useSession()
 
-    console.log(session, router)
+    console.log(session)
 
-    const handleFormSubmit = async values => {
-        signIn('credentials', {
-            email: values.email,
-            password: values.password,
-            callbackUrl: 'http://localhost:3000/user/dashboard',
-        }) 
-    }
+    const handleGoogleLogin = () => {
+        signIn("google", {
+          callbackUrl: `${APP_URL}/user/dashboard`,
+        });
+      };
+    
+      const handleFormSubmit = (values) => {
+        signIn("credentials", {
+          email: values.email,
+          password: values.password,
+          callbackUrl: `${APP_URL}/user/dashboard`,
+        });
+      };
 
     return(
         <TemplateDefault>
@@ -44,8 +52,28 @@ const Signin = () => {
                      Entre na sua conta
                 </Typography>
                 
+            
                 <Container maxWidth="md">
                     <Box className={classes.box}>
+                        <Box display="flex" justifyContent="center">
+                            <Button 
+                                variant='contained'
+                                color=':primary'
+                                startIcon={
+                                    <Image
+                                        src="/images/logo_google.png"  
+                                        width={20} 
+                                        height={20}
+                                        alt="Login Google"
+                                    />
+                                }
+                                onClick={handleGoogleLogin}
+                                >Entrar com Google
+                            </Button>
+                        </Box>
+                        <Box className={classes.orSeparator}>
+                            <span>ou</span>
+                        </Box>
                         <Formik
                             initialValues={initialValues}
                             validationSchema={validationSchema}
@@ -126,6 +154,12 @@ const Signin = () => {
             </Container>
         </TemplateDefault>
     )
+}
+
+Signin.getInitialProps = async function () {
+    return {
+        APP_URL: process.env.APP_URL,
+    }
 }
 
 export default Signin

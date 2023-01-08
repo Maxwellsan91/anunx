@@ -1,30 +1,55 @@
-import axios from 'axios'
-import NextAuth from 'next-auth'
-import Providers from 'next-auth/providers'
+import axios from "axios";
+import NextAuth from "next-auth";
+import Providers from "next-auth/providers";
 
 export default NextAuth({
-    providers: [
-        Providers.Credentials({
-            name: 'Credentials',
-            async authorize(credentials) {
-                const res = await axios.post('http://localhost:3000/api/auth/signin', credentials)
+  providers: [
+    Providers.Google({
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
 
-                const user = res.data
-                if (user) {
-                  return user
-                } else {
-                  throw '/auth/signin?i=1'          
-                }
-            }
-        })
-    ],
+    Providers.Credentials({
+      name: "Credentials",
+      async authorize(credentials) {
+        const res = await axios.post(
+          `${process.env.APP_URL}/api/auth/signin`,
+          credentials
+        );
 
-    session: {
-        jwt: true,
+        const user = res.data;
+
+        if (user) {
+          return user;
+        } else {
+          throw "/auth/signin?i=1";
+        }
+      },
+    }),
+  ],
+
+  session: {
+    jwt: true,
+  },
+
+  jwt: {
+    secret: process.env.JWT_TOKEN,
+  },
+
+  callbacks: {
+    async jwt(token, user) {
+      if (user) {
+        token.uid = user.id;
+      }
+
+      return Promise.resolve(token);
     },
 
-    jwt: {
-        secret: process.env.JWT_TOKEN,
+    async session(session, user) {
+      session.userId = user.uid;
+      return session;
     },
-    database: process.env.MONGODB_URI,
-})
+  },
+
+  database: process.env.MONGODB_URI,
+});
