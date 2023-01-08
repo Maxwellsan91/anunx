@@ -1,6 +1,5 @@
 import {
   Button,
-  Card,
   CardMedia,
   Container,
   Grid,
@@ -8,7 +7,7 @@ import {
 }
 from '@material-ui/core'
 
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core'
 import TemplateDefault from '../../src/templates/Default'
 import Cards from '../../src/components/Cards'
 
@@ -19,9 +18,9 @@ const useStyles = makeStyles ((theme) => ({
   }
 }))
 
-
-export default function Home(){
+const Home = () => {
   const classes = useStyles()
+
   return(
     <TemplateDefault>
       <Container maxWidth="sm" >
@@ -105,3 +104,7 @@ export default function Home(){
     </TemplateDefault>
   )
 }
+
+Home.requireAuth = true
+
+export default Home
