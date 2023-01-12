@@ -10,7 +10,7 @@ export default NextAuth({
     }),
 
     Providers.Credentials({
-      name: "Credentials",
+      name: 'Credentials',
       async authorize(credentials) {
         const res = await axios.post(
           `${process.env.APP_URL}/api/auth/signin`,
@@ -37,9 +37,9 @@ export default NextAuth({
   },
 
   callbacks: {
-    async jwt(token, user) {
+    async jwt (token, user) {
       if (user) {
-        token.uid = user.id;
+        token.uid = user._id;
       }
 
       return Promise.resolve(token);
