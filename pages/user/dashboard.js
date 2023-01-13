@@ -13,6 +13,7 @@ import dbConnect from '../../src/utils/dbConnect'
 import ProductsModel from '../../src/models/products'
 import TemplateDefault from '../../src/templates/Default'
 import Cards from '../../src/components/Cards'
+import { formatCurrency } from '../../src/utils/currency'
 
 const useStyles = makeStyles ((theme) => ({
   buttonAdd: {
@@ -44,7 +45,7 @@ const Home = ({ products }) => {
             <Cards
               image = {`/uploads/${product.files[0].name}`}
               title = {product.title}
-              subTitle = {product.price}                                                        
+              subTitle = {formatCurrency(product.price)}                                                        
                 actions= {
                   <>
                     <Button size="small" color='primary'>
