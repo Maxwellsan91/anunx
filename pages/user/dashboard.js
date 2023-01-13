@@ -1,13 +1,16 @@
 import {
   Button,
-  CardMedia,
   Container,
   Grid,
   Typography
 }
 from '@material-ui/core'
 
+import { getSession } from 'next-auth/client'
 import { makeStyles } from '@material-ui/core'
+
+import dbConnect from '../../src/utils/dbConnect'
+import ProductsModel from '../../src/models/products'
 import TemplateDefault from '../../src/templates/Default'
 import Cards from '../../src/components/Cards'
 
@@ -18,8 +21,10 @@ const useStyles = makeStyles ((theme) => ({
   }
 }))
 
-const Home = () => {
+const Home = ({ products }) => {
   const classes = useStyles()
+
+  console.log(products)
 
   return(
     <TemplateDefault>
@@ -31,18 +36,15 @@ const Home = () => {
           Publicar novo anúncio
         </Button>
       </Container>
-      <Container maxWidth="md">
+      <Container maxWidth="md">        
         <Grid container spacing={4}>
-          <Grid item xs={12} sm={6} md={4}>
+        {
+          products.map(product => (
+            <Grid key={product._id} item xs={12} sm={6} md={4}>
             <Cards
-              image = {'https://source.unsplash.com/random'}
-              title = "Produto X"
-              subTitle = "R$ 60,00"
-            />
-              <CardMedia
-                className={classes.cardMedia}
-                image={'https://source.unsplash.com/random'}
-                title="Titulo da Imagem"                
+              image = {`/uploads/${product.files[0].name}`}
+              title = {product.title}
+              subTitle = {product.price}                                                        
                 actions= {
                   <>
                     <Button size="small" color='primary'>
@@ -55,50 +57,8 @@ const Home = () => {
                 }
               />
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Cards
-              image = {'https://source.unsplash.com/random'}
-              title = "Produto X"
-              subTitle = "R$ 60,00"
-            />
-              <CardMedia
-                className={classes.cardMedia}
-                image={'https://source.unsplash.com/random'}
-                title="Titulo da Imagem"                
-                actions= {
-                  <>
-                    <Button size="small" color='primary'>
-                      Editar
-                    </Button>
-                    <Button size="small" color='primary'>
-                      Remover
-                    </Button>
-                  </>
-                }
-              />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Cards
-              image = {'https://source.unsplash.com/random'}
-              title = "Produto X"
-              subTitle = "R$ 60,00"
-            />
-              <CardMedia
-                className={classes.cardMedia}
-                image={'https://source.unsplash.com/random'}
-                title="Titulo da Imagem"                
-                actions= {
-                  <>
-                    <Button size="small" color='primary'>
-                      Editar
-                    </Button>
-                    <Button size="small" color='primary'>
-                      Remover
-                    </Button>
-                  </>
-                }
-              />
-          </Grid>
+          ))
+        }
         </Grid>
       </Container>
     </TemplateDefault>
@@ -106,5 +66,18 @@ const Home = () => {
 }
 
 Home.requireAuth = true
+
+export async function getServerSideProps({ req }){
+  const session = await getSession({ req })
+  await dbConnect()
+  
+  const products = await ProductsModel.find({ 'user.id': session.userId })
+  return{
+    
+     props: {      
+        products: JSON.parse(JSON.stringify(products)),
+     }
+  }
+}
 
 export default Home

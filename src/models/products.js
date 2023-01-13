@@ -36,4 +36,4 @@ const schema = new mongoose.Schema({
     }
 })
 
-export default mongoose.models.products || mongoose.model('products', schema)
+export default mongoose.models.products || mongoose.model("products", schema)
