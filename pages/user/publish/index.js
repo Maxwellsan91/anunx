@@ -138,6 +138,7 @@ const Publish = ({ userId, image }) => {
                                             <MenuItem value={"Celular e Tablets"}>Celular e Tablets</MenuItem>
                                             <MenuItem value={"Equipamentos Elétricos"}>Equipamentos Elétricos</MenuItem>
                                             <MenuItem value={"Emprego"}>Emprego</MenuItem>
+                                            <MenuItem value={"Filmes"}>Filmes</MenuItem>
                                             <MenuItem value={"Imóveis"}>Imóveis</MenuItem>
                                             <MenuItem value={"Lazer"}>Lazer</MenuItem>
                                             <MenuItem value={"Móveis, Casa, Jardim"}>Móveis, Casa, Jardim</MenuItem>

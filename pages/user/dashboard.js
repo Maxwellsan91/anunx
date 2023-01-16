@@ -121,7 +121,7 @@ const Home = ({ products }) => {
         {
           products.length === 0 && 
           <Typography component="div" variant="body1" align="center" color="textPrimary" gutterBottom>
-            Nenhum anúncio publicado.
+            Nenhum anúncio publicado. 
           </Typography>
         }        
         <Grid container spacing={4}>

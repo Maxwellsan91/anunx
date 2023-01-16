@@ -34,8 +34,9 @@ const post = async (req, res) => {
                 const extension = path.extname(file.name) // .png ou .jpg ou ...
                 const filename = `${timestamp}_${random}${extension}`
 
-                const oldPath = path.join(__dirname, `../../../../${file.path}`)
-                const newPath = path.join(__dirname, `../../../../${form.uploadDir}/${filename}`)
+                const oldPath = path.join(__dirname, `../../../../../${file.path}`)
+                const newPath = path.join(__dirname, `../../../../../${form.uploadDir}/${filename}`)
+
 
                 filesToSave.push({
                     name: filename,
@@ -52,6 +53,16 @@ const post = async (req, res) => {
 
             })
             // 
+
+            function dateFormat(){
+                var data = new Date(),
+                    dia  = data.getDate().toString(),
+                    diaF = (dia.length == 1) ? '0'+dia : dia,
+                    mes  = (data.getMonth()+1).toString(), //+1 pois no getMonth Janeiro começa com zero.
+                    mesF = (mes.length == 1) ? '0'+mes : mes,
+                    anoF = data.getFullYear();
+                return diaF+"/"+mesF+"/"+anoF;
+            }
 
             const {
                 title,
@@ -77,6 +88,7 @@ const post = async (req, res) => {
                     phone,  
                     image,
                 },      
+                date: dateFormat(),
                 // email,
                 // phone,         
                 files: filesToSave,
