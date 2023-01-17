@@ -13,7 +13,6 @@ import {
   DialogTitle,
 }
 from '@material-ui/core'
-import Slide from '@mui/material/Slide';
 
 import { getSession } from 'next-auth/client'
 import { makeStyles } from '@material-ui/core'
