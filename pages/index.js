@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import Link from 'next/link'
-import slugyfy from 'slugify'
+import slugify from 'slugify'
+import { useRouter } from 'next/router'
 import {
     Container,
     Grid,
@@ -35,8 +37,16 @@ const useStyles = makeStyles((theme) => ({
 
 
 const Home = ({ products }) => {
-
+    const router = useRouter()
+    const [search, setSearch] = useState()
     const classes = useStyles()
+
+    const handleSubimitSearch = () => {
+        router.push({
+            pathname: `/search/${search}`,
+        })
+    }
+
     return (
         <TemplateDefault>
             <Container maxWidth="md" >
@@ -45,10 +55,11 @@ const Home = ({ products }) => {
                         </Typography>
                         <Paper className={classes.searchBox}>
                             <InputBase 
+                                onChange={(e) => setSearch(e.target.value)}
                                 placeholder='Ex.: Iphone 12 Plus'
                                 fullWidth
                             />
-                            <IconButton>
+                            <IconButton onClick={handleSubimitSearch}>
                                 <SearchIcon />
                             </IconButton>
                         </Paper>
@@ -62,8 +73,8 @@ const Home = ({ products }) => {
                 <Grid container spacing={4}>
                     {
                         products.map(product => {
-                            const category = slugyfy(product.category).toLowerCase()
-                            const title = slugyfy(product.title).toLowerCase()
+                            const category = slugify(product.category).toLowerCase()
+                            const title = slugify(product.title).toLowerCase()
 
                             return (
                                 <Grid key={product._id} item xs={12} sm={6} md={4}>

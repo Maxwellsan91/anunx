@@ -1,3 +1,5 @@
+import Link from 'next/link'
+import slugify from 'slugify'
 import {
     Container,
     Typography,
@@ -8,11 +10,12 @@ import {
     InputBase
 
 } from '@material-ui/core'
+import { formatCurrency } from '../../src/utils/currency'
+import productsModel from '../../src/models/products'
 
 import SearchIcon from '@material-ui/icons/Search'
 import { makeStyles } from '@material-ui/core'
 import TemplateDefault from '../../src/templates/Default'
-import Card from '../../src/components/Cards'
 import Cards from '../../src/components/Cards'
 
 
@@ -25,16 +28,19 @@ const useStyles = makeStyles((theme) => ({
     searchBox: {
 
     },
-    imputSearch: {
+    searchBox: {
 
     },
     imputSearch: {
 
-    }
+    },
+    linkAnc: {
+    textDecorationLine: 'none',
+  }
 }))
 
 
-const List = () => {
+const List = ( {products, q} ) => {
     const classes = useStyles()
     return (
         <TemplateDefault>
@@ -60,38 +66,64 @@ const List = () => {
                             Anúncios
                         </Typography>
                         <Typography component="span" variant="subtitle2">
-                            Encontrado 200 anúncios
+                            Encontrado {products.length} anúncios para o termo "{q}"
                         </Typography>
                     </Box>
                 </Grid>
                 <br/><br/>
                 <Grid container spacing={4}>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Cards
-                            image = {'https://source.unsplash.com/random'}
-                            title = "Produto X"
-                            subTitle = "R$ 60,00"
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Cards
-                            image = {'https://source.unsplash.com/random'}
-                            title = "Produto X"
-                            subTitle = "R$ 60,00"
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Cards
-                            image = {'https://source.unsplash.com/random'}
-                            title = "Produto X"
-                            subTitle = "R$ 60,00"
-                        />
-                    </Grid>
+                    {
+                        products.map(product => {
+                            const category = slugify(product.category).toLowerCase()
+                            const title = slugify(product.title).toLowerCase()
+
+                            return (
+                                <Grid key={product._id} item xs={12} sm={6} md={4}>
+                                    <Link href={`/${category}/${title}/${product._id}`} passHref className={classes.linkAnc}>    
+                                            <Cards
+                                            image = {`/uploads/${product.files[0].name}`}
+                                            title = {product.title}
+                                            subtitle= {formatCurrency(product.price)}
+                                            />
+                                    </Link>    
+                                </Grid>
+                            )
+                        })
+                    }
                 </Grid>
 
             </Container>
         </TemplateDefault>
     )
+}
+
+export async function getServerSideProps({ query }){
+    const { q } = query
+
+    const products = await productsModel.find({
+        $or: [
+            { title: 
+                { 
+                    $regex: q,
+                    $options: 'i' 
+                } 
+            },
+            {
+                description: 
+                { 
+                    $regex: q,
+                    $options: 'i' 
+                }
+            }
+        ]
+    })
+
+    return {
+        props: {
+            products: JSON.parse(JSON.stringify(products)),
+            q: q
+        }
+    }
 }
 
 export default List
